@@ -9,6 +9,7 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.listener.ExecutionContextPromotionListener;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
@@ -90,7 +91,15 @@ public class BatchConfiguration {
     @Bean
     public Step step0() {
     	Tasklet tasklet = new MyTasklet();
-    	return stepBuilderFactory.get("step0").tasklet(tasklet).build();
+//    	Step step = stepBuilderFactory.get("step0").tasklet(tasklet).build();
+    	return stepBuilderFactory.get("step0").tasklet(tasklet).listener(promotionListener()).build();
+    }
+    
+    @Bean
+    public ExecutionContextPromotionListener promotionListener() {
+    	ExecutionContextPromotionListener promotionListener = new ExecutionContextPromotionListener();
+    	promotionListener.setKeys(new String[] {"exclusionList"});
+    	return promotionListener;
     }
 
     @Bean
