@@ -9,6 +9,7 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
@@ -80,9 +81,16 @@ public class BatchConfiguration {
         return jobBuilderFactory.get("importUserJob")
                 .incrementer(new RunIdIncrementer())
                 .listener(listener())
-                .flow(step1())
+                .flow(step0())
+                .next(step1())
                 .end()
                 .build();
+    }
+    
+    @Bean
+    public Step step0() {
+    	Tasklet tasklet = new MyTasklet();
+    	return stepBuilderFactory.get("step0").tasklet(tasklet).build();
     }
 
     @Bean
