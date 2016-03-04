@@ -91,7 +91,6 @@ public class BatchConfiguration {
     @Bean
     public Step step0() {
     	Tasklet tasklet = new MyTasklet();
-//    	Step step = stepBuilderFactory.get("step0").tasklet(tasklet).build();
     	return stepBuilderFactory.get("step0").tasklet(tasklet).listener(promotionListener()).build();
     }
     
