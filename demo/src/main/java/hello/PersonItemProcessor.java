@@ -20,7 +20,7 @@ public class PersonItemProcessor implements ItemProcessor<Person, Person> {
     public Person process(final Person person) throws Exception {
     	
     	if (this.exclusionList.contains(person)) {
-    		System.out.println("Person " + person.getFirstName() + " " + person.getLastName() + " found in exclusionList");
+    		System.out.println("Person " + person.getFirstName() + " " + person.getLastName() + " found in exclusionList. Hence, not converting.");
     		return null;
     	}
     	
@@ -42,11 +42,8 @@ public class PersonItemProcessor implements ItemProcessor<Person, Person> {
         ExecutionContext jobContext = jobExecution.getExecutionContext();
         if (jobContext.containsKey("exclusionList")) {
         	this.exclusionList = (List<Person>) jobContext.get("exclusionList");
-        	for (Person person : exclusionList) {
-        		System.out.println(person.getFirstName() + " " + person.getLastName() + " found in exclusionList; hence not writing");
-        	}
         } else {
-        	System.out.println("Job execution context doesn't contain exclusionList");
+        	log.info("Job execution context doesn't contain exclusionList");
         }
     }
     
